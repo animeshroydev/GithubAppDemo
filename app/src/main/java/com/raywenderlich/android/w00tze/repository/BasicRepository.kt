@@ -9,6 +9,8 @@ import com.raywenderlich.android.w00tze.app.Constants.fullUrlString
 import com.raywenderlich.android.w00tze.model.Gist
 import com.raywenderlich.android.w00tze.model.Repo
 import com.raywenderlich.android.w00tze.model.User
+import org.json.JSONArray
+import org.json.JSONException
 import java.io.IOException
 
 object BasicRepository : Repository {
@@ -16,7 +18,7 @@ object BasicRepository : Repository {
     private const val TAG = "BasicRepository"
 
     // user name that we are fetching data from
-    private const val LOGIN = "w00tze"
+    private const val LOGIN = "animeshroydev"
 
     override fun getRepos(): LiveData<List<Repo>> {
         val liveData = MutableLiveData<List<Repo>>()
@@ -57,18 +59,28 @@ object BasicRepository : Repository {
 
             Log.i(TAG, "Repo data: $jsonString")
 
-            val repos = mutableListOf<Repo>()
-
-            for (i in 0 until 100) {
-                val repo = Repo("repo name")
-                repos.add(repo)
-            }
-
-            return repos
+            return parseRepos(jsonString)
         } catch (e: IOException) {
             Log.e(TAG, "Error retrieving repos: ${e.localizedMessage}")
         }
+        catch (e: JSONException) {
+            Log.e(TAG, "Error retrieving repos: ${e.localizedMessage}")
+        }
     return null
+    }
+
+    // parse JSON repos
+    private fun parseRepos(jsonString: String): List<Repo> {
+        val repos = mutableListOf<Repo>()
+
+        val reposArray = JSONArray(jsonString)
+        for (i in 0 until reposArray.length()) {
+            val repoObject = reposArray.getJSONObject(i)
+            // getting the repo names of now
+            val repo = Repo(repoObject.getString("name"))
+            repos.add(repo)
+        }
+        return repos
     }
 
     // all network request must me in background
