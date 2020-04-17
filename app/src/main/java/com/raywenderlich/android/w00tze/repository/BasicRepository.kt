@@ -20,23 +20,17 @@ object BasicRepository : Repository {
 
     override fun getRepos(): LiveData<List<Repo>> {
         val liveData = MutableLiveData<List<Repo>>()
-        FetchRepoAsyncTask({ repos ->
+        FetchRepoAsyncTask { repos ->
             liveData.value = repos
-        }).execute()
+        }.execute()
         return liveData
     }
 
     override fun getGists(): LiveData<List<Gist>> {
         val liveData = MutableLiveData<List<Gist>>()
-        val gists = mutableListOf<Gist>()
-
-        for (i in 0 until 100) {
-            val gist = Gist("2018-02-23T17:42:52Z", "w00t")
-            gists.add(gist)
-        }
-
-        liveData.value = gists
-
+        FetchGistsAsyncTask { gists ->
+            liveData.value = gists
+        }.execute()
         return liveData
     }
 
@@ -55,6 +49,7 @@ object BasicRepository : Repository {
         return liveData
     }
 
+    // get repos
     private fun fetchRepos() : List<Repo>? {
         try {
             val url = Uri.parse(fullUrlString("/users/${LOGIN}/repos")).toString()
@@ -83,6 +78,42 @@ object BasicRepository : Repository {
         }
 
         override fun onPostExecute(result: List<Repo>?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                callback(result)
+            }
+        }
+    }
+
+    // get gists
+    private fun fetchGists() : List<Gist>? {
+        try {
+            val url = Uri.parse(fullUrlString("/users/${LOGIN}/gists")).toString()
+            val jsonString = getUrlAsString(url)
+
+            Log.i(TAG, "Gists data: $jsonString")
+
+            val gists = mutableListOf<Gist>()
+
+            for (i in 0 until 100) {
+                val gist = Gist("2018-02-23T17:42:52Z", "w00t")
+                gists.add(gist)
+            }
+
+            return gists
+        } catch (e: IOException) {
+            Log.e(TAG, "Error retrieving gists: ${e.localizedMessage}")
+        }
+        return null
+    }
+
+    // all network request must me in background
+    private class FetchGistsAsyncTask(val callback: GistsCallback) : AsyncTask<GistsCallback, Void, List<Gist>>() {
+        override fun doInBackground(vararg params: GistsCallback?): List<Gist>? {
+            return fetchGists()
+        }
+
+        override fun onPostExecute(result: List<Gist>?) {
             super.onPostExecute(result)
             if (result != null) {
                 callback(result)
