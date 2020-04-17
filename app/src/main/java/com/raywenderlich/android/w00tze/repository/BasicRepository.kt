@@ -18,7 +18,8 @@ object BasicRepository : Repository {
     private const val TAG = "BasicRepository"
 
     // user name that we are fetching data from
-    private const val LOGIN = "animeshroydev"
+//    private const val LOGIN = "animeshroydev"
+    private const val LOGIN = "w00tze"
 
     override fun getRepos(): LiveData<List<Repo>> {
         val liveData = MutableLiveData<List<Repo>>()
@@ -83,6 +84,8 @@ object BasicRepository : Repository {
         return repos
     }
 
+
+
     // all network request must me in background
     private class FetchRepoAsyncTask(val callback: ReposCallback) : AsyncTask<ReposCallback, Void, List<Repo>>() {
         override fun doInBackground(vararg params: ReposCallback?): List<Repo>? {
@@ -96,7 +99,19 @@ object BasicRepository : Repository {
             }
         }
     }
+    // parse JSON gists
+    private fun parseGists(jsonString: String): List<Gist> {
+        val gists = mutableListOf<Gist>()
 
+        val gistsArray = JSONArray(jsonString)
+        for (i in 0 until gistsArray.length()) {
+            val gistObject = gistsArray.getJSONObject(i)
+            // getting the repo names of now
+            val gist = Gist(gistObject.getString("created_at"), gistObject.getString("description"))
+            gists.add(gist)
+        }
+        return gists
+    }
     // get gists
     private fun fetchGists() : List<Gist>? {
         try {
@@ -105,15 +120,11 @@ object BasicRepository : Repository {
 
             Log.i(TAG, "Gists data: $jsonString")
 
-            val gists = mutableListOf<Gist>()
-
-            for (i in 0 until 100) {
-                val gist = Gist("2018-02-23T17:42:52Z", "w00t")
-                gists.add(gist)
-            }
-
-            return gists
+            return parseGists(jsonString)
         } catch (e: IOException) {
+            Log.e(TAG, "Error retrieving gists: ${e.localizedMessage}")
+        }
+        catch (e: JSONException) {
             Log.e(TAG, "Error retrieving gists: ${e.localizedMessage}")
         }
         return null
