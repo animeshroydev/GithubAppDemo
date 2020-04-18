@@ -19,4 +19,7 @@
   <string name="username_hint">username</string>
   <string name="username_title">GitHub Username</string>
   <string name="username_ok">OK</string>
+    <string name="error_retriving_user">Error Retrieving user</string>
+  <string name="error_retrieving_repos">Error Retrieving Repos</string>
+  <string name="error_retrieving_gist">Error Retrieving Gist</string>
 </resources>

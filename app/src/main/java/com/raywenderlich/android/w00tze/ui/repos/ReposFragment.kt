@@ -39,8 +39,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.raywenderlich.android.w00tze.R
+import com.raywenderlich.android.w00tze.model.ApiError
+import com.raywenderlich.android.w00tze.model.Either
 import com.raywenderlich.android.w00tze.model.Repo
+import com.raywenderlich.android.w00tze.model.Status
 import com.raywenderlich.android.w00tze.viewmodel.ReposViewModel
 import kotlinx.android.synthetic.main.fragment_repos.*
 
@@ -65,8 +69,16 @@ class ReposFragment : Fragment() {
     reposRecyclerView.layoutManager = LinearLayoutManager(context)
     reposRecyclerView.adapter = adapter
 
-    reposViewModel.getRepos().observe(this, Observer<List<Repo>> { repos ->
-      adapter.updateRepos(repos ?: emptyList())
+    reposViewModel.getRepos().observe(this, Observer<Either<List<Repo>>> { either ->
+      if (either?.status == Status.SUCCESS && either.data != null) {
+        val repos = either.data
+        adapter.updateRepos(repos)
+      } else {
+        if (either?.error == ApiError.REPO) {
+          Toast.makeText(context, getString(R.string.error_retrieving_repos), Toast.LENGTH_SHORT).show()
+        }
+      }
+
     })
   }
 }
