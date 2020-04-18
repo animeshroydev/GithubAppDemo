@@ -2,22 +2,13 @@ package com.raywenderlich.android.w00tze.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.net.Uri
-import android.os.AsyncTask
-import android.util.Log
-import com.raywenderlich.android.w00tze.app.Constants.fullUrlString
 import com.raywenderlich.android.w00tze.app.Injection
-import com.raywenderlich.android.w00tze.app.isNullOrBlankOrNullString
 import com.raywenderlich.android.w00tze.model.Gist
 import com.raywenderlich.android.w00tze.model.Repo
 import com.raywenderlich.android.w00tze.model.User
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 object RemoteRepository : Repository {
 
@@ -36,7 +27,7 @@ object RemoteRepository : Repository {
 
             override fun onResponse(call: Call<List<Repo>>, response: Response<List<Repo>>?) {
                 if (response != null) {
-                    liveData.value = emptyList()
+                    liveData.value = response.body()
                 }
             }
 
@@ -76,7 +67,7 @@ object RemoteRepository : Repository {
 
             override fun onResponse(call: Call<User>, response: Response<User>?) {
                 if (response != null) {
-                    liveData.value = null
+                    liveData.value = response.body()
                 }
 
             }

@@ -31,5 +31,7 @@
 
 package com.raywenderlich.android.w00tze.model
 
+import com.google.gson.annotations.SerializedName
 
-data class Repo(val name: String)
+
+data class Repo(@SerializedName("name") val name: String)
