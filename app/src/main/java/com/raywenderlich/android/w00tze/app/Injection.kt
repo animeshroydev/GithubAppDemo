@@ -31,22 +31,45 @@
 
 package com.raywenderlich.android.w00tze.app
 
+import com.raywenderlich.android.w00tze.BuildConfig
 import com.raywenderlich.android.w00tze.repository.GithubApi
 import com.raywenderlich.android.w00tze.repository.RemoteRepository
 import com.raywenderlich.android.w00tze.repository.Repository
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
 object Injection {
-  fun provideRepository(): Repository = RemoteRepository
+    fun provideRepository(): Repository = RemoteRepository
 
-  private fun provideRetrofit(): Retrofit {
-    return Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-  }
+    private fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+                .baseUrl("https://api.github.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(provideOkHttpClient())
+                .build()
+    }
+
+    // useful debugging info in logcat (logging Interceptor)
+    private fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+      val logging = HttpLoggingInterceptor()
+      logging.level = if (BuildConfig.DEBUG) {
+        HttpLoggingInterceptor.Level.BODY
+      } else {
+        HttpLoggingInterceptor.Level.NONE
+      }
+      return logging
+    }
+
+    // useful debugging info in logcat
+    private fun provideOkHttpClient(): OkHttpClient {
+      val httpClient = OkHttpClient.Builder()
+      httpClient.addInterceptor(provideLoggingInterceptor())
+      return httpClient.build()
+    }
+
 
     fun provideGithubApi(): GithubApi {
         return provideRetrofit().create(GithubApi::class.java)
