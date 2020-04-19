@@ -50,7 +50,7 @@ class GistsViewModel(application: Application) : AndroidViewModel(application) {
   fun sendGist(description: String, filename: String, content: String): LiveData<Either<Gist>> {
     val gistFile = GistFile(content)
     val gistFiles = mapOf(filename to gistFile)
-    val request = GistRequest(gistFiles)
+    val request = GistRequest(description, gistFiles)
 
     return repository.postGist(request)
   }

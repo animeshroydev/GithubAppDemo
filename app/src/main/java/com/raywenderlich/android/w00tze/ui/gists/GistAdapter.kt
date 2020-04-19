@@ -82,6 +82,7 @@ class GistAdapter(private val gists: MutableList<Gist>, private val listener: Gi
       this.gist = gist
       itemView.gistDescription.text = gist.description
       itemView.gistCreatedAt.text = DATE_FORMATTER.format(gist.createdAt)
+      itemView.numFiles.text = gist.files.size.toString()
     }
   }
 
