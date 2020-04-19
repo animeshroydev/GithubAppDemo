@@ -18,8 +18,8 @@ android {
     buildTypes {
         debug {
             // TODO 2 PASTE HERE BELOW
-            buildConfigField "String", "CLIENT_ID", "\"182da67f7c541bec4a8c\""
-            buildConfigField "String", "CLIENT_SECRET", "\"7b50fb4458e36b687b358c75859f44784eb75142\""
+            buildConfigField "String", "CLIENT_ID", "\"PASTE_HERE\""
+            buildConfigField "String", "CLIENT_SECRET", "\"PASTE_HERE\""
             buildConfigField "String", "REDIRECT_URI", "\"W00tze://callback\""
         }
         release {
