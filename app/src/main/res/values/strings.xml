@@ -22,4 +22,5 @@
     <string name="error_retriving_user">Error Retrieving user</string>
   <string name="error_retrieving_repos">Error Retrieving Repos</string>
   <string name="error_retrieving_gist">Error Retrieving Gist</string>
+  <string name="error_posting_gist">Error Posting Gist</string>
 </resources>

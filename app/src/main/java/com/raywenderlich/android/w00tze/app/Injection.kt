@@ -31,11 +31,10 @@
 
 package com.raywenderlich.android.w00tze.app
 
+
 import com.raywenderlich.android.w00tze.BuildConfig
-import com.raywenderlich.android.w00tze.repository.AuthApi
-import com.raywenderlich.android.w00tze.repository.GithubApi
-import com.raywenderlich.android.w00tze.repository.RemoteRepository
-import com.raywenderlich.android.w00tze.repository.Repository
+import com.raywenderlich.android.w00tze.model.AuthenticationPrefs
+import com.raywenderlich.android.w00tze.repository.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -53,24 +52,27 @@ object Injection {
                 .build()
     }
 
-    // useful debugging info in logcat (logging Interceptor)
     private fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-      val logging = HttpLoggingInterceptor()
-      logging.level = if (BuildConfig.DEBUG) {
-        HttpLoggingInterceptor.Level.BODY
-      } else {
-        HttpLoggingInterceptor.Level.NONE
-      }
-      return logging
+        val logging = HttpLoggingInterceptor()
+        logging.level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
+        return logging
     }
 
-    // useful debugging info in logcat
     private fun provideOkHttpClient(): OkHttpClient {
-      val httpClient = OkHttpClient.Builder()
-      httpClient.addInterceptor(provideLoggingInterceptor())
-      return httpClient.build()
-    }
+        val httpClient = OkHttpClient.Builder()
+        httpClient.addInterceptor(provideLoggingInterceptor())
 
+        httpClient.addInterceptor { chain ->
+            val request = chain.request().newBuilder().addHeader("Authorization", "token ${AuthenticationPrefs.getAuthToken()}").build()
+            chain.proceed(request)
+        }
+
+        return httpClient.build()
+    }
 
     fun provideGithubApi(): GithubApi {
         return provideRetrofit().create(GithubApi::class.java)
