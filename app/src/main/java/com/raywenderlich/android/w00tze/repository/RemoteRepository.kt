@@ -15,7 +15,7 @@ object RemoteRepository : Repository {
     // user name that we are fetching data from
     // private const val LOGIN = "animeshroydev"
     // private const val LOGIN = "animeshroydev"
-    private const val LOGIN = "w00tze"
+    private val LOGIN = AuthenticationPrefs.getUsername()
 
     private val api = Injection.provideGithubApi()
 

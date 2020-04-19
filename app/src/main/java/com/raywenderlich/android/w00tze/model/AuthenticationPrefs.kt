@@ -66,7 +66,7 @@ object AuthenticationPrefs {
     editor.putString(KEY_USERNAME, username).apply()
   }
 
-  fun getUsername(): String = sharedPrefs().getString(KEY_USERNAME, "w00tze")
+  fun getUsername(): String = sharedPrefs().getString(KEY_USERNAME, "animeshroydev")
 
   fun clearUsername() = sharedPrefs().edit().remove(KEY_USERNAME).apply()
 }

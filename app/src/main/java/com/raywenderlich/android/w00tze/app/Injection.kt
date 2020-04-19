@@ -32,6 +32,7 @@
 package com.raywenderlich.android.w00tze.app
 
 import com.raywenderlich.android.w00tze.BuildConfig
+import com.raywenderlich.android.w00tze.repository.AuthApi
 import com.raywenderlich.android.w00tze.repository.GithubApi
 import com.raywenderlich.android.w00tze.repository.RemoteRepository
 import com.raywenderlich.android.w00tze.repository.Repository
@@ -73,5 +74,17 @@ object Injection {
 
     fun provideGithubApi(): GithubApi {
         return provideRetrofit().create(GithubApi::class.java)
+    }
+
+    private fun provideAuthRetrofit(): Retrofit {
+        return Retrofit.Builder()
+                .baseUrl("https://github.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(provideOkHttpClient())
+                .build()
+    }
+
+    fun provideAuthApi(): AuthApi {
+        return provideAuthRetrofit().create(AuthApi::class.java)
     }
 }
