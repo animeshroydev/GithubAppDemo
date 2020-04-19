@@ -45,7 +45,7 @@ object Injection {
     fun provideRepository(): Repository = RemoteRepository
 
     // TODO 1 generate token: https://github.com/settings/tokens/new
-    private const val PERSONAL_TOKEN = "2d49364c28ede478c6a5f45bccd2264c043e1cf3"
+    private const val PERSONAL_TOKEN = ""
 
     private fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
