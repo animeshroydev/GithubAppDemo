@@ -44,6 +44,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Injection {
     fun provideRepository(): Repository = RemoteRepository
 
+    // TODO 1 generate token: https://github.com/settings/tokens/new
+    private const val PERSONAL_TOKEN = "2d49364c28ede478c6a5f45bccd2264c043e1cf3"
+
     private fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
@@ -67,7 +70,12 @@ object Injection {
         httpClient.addInterceptor(provideLoggingInterceptor())
 
         httpClient.addInterceptor { chain ->
-            val request = chain.request().newBuilder().addHeader("Authorization", "token ${AuthenticationPrefs.getAuthToken()}").build()
+
+            // Saved In shared Pref
+            // val request = chain.request().newBuilder().addHeader("Authorization", "token ${AuthenticationPrefs.getAuthToken()}").build()
+
+            // Directly
+            val request = chain.request().newBuilder().addHeader("Authorization", "token $PERSONAL_TOKEN").build()
             chain.proceed(request)
         }
 
