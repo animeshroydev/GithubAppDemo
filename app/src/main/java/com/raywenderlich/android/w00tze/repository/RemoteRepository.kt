@@ -103,4 +103,26 @@ object RemoteRepository : Repository {
         })
         return liveData
     }
+
+    override fun deleteGist(gistId: String): LiveData<Either<EmptyResponse>> {
+        val liveData = MutableLiveData<Either<EmptyResponse>>()
+
+        api.deleteGist(gistId).enqueue(object : Callback<EmptyResponse> {
+
+            override fun onResponse(call: Call<EmptyResponse>?, response: Response<EmptyResponse>?) {
+                if (response != null && response.isSuccessful) {
+                    liveData.value = Either.success(response.body())
+                } else {
+                    liveData.value = Either.error(ApiError.DELETE_GIST, null)
+                }
+            }
+
+            override fun onFailure(call: Call<EmptyResponse>, t: Throwable) {
+                liveData.value = Either.error(ApiError.DELETE_GIST, null)
+            }
+
+        })
+
+        return liveData
+    }
 }

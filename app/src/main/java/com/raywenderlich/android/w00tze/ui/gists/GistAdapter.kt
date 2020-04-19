@@ -31,6 +31,7 @@
 
 package com.raywenderlich.android.w00tze.ui.gists
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -64,6 +65,19 @@ class GistAdapter(private val gists: MutableList<Gist>, private val listener: Gi
   fun addGist(gist: Gist) {
     this.gists.add(0, gist)
     notifyItemInserted(0)
+  }
+
+  fun deleteGist(gist: Gist) {
+    val updatedGists = mutableListOf<Gist>()
+    updatedGists.addAll(gists)
+    updatedGists.remove(gist)
+
+    val diffCallback = GistDiffCallback(this.gists, updatedGists)
+    val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+    this.gists.clear()
+    this.gists.addAll(updatedGists)
+    diffResult.dispatchUpdatesTo(this)
   }
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {

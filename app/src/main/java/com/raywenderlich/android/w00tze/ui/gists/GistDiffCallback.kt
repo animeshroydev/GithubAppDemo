@@ -39,8 +39,7 @@ class GistDiffCallback(private val oldGists: List<Gist>,
                        private val newGists: List<Gist>) : DiffUtil.Callback() {
 
   override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//    return oldGists[oldItemPosition].id == newGists[newItemPosition].id // TODO: uncomment
-    return false
+    return oldGists[oldItemPosition].id == newGists[newItemPosition].id
   }
 
   override fun getOldListSize() = oldGists.size

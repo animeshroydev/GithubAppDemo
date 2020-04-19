@@ -37,4 +37,5 @@ import java.util.*
 
 data class Gist(@SerializedName("created_at") val createdAt: Date,
                 @SerializedName("description") val description: String,
-                val files: Map<String, GistFile>)
+                val files: Map<String, GistFile>,
+                val id: String)
