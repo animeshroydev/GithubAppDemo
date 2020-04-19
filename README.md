@@ -9,4 +9,4 @@
 
 Branch **UsingHttpUrlConnection** and **UsingRetrofit** don't need any type of *key* or *authentication* to retrieve information because it's publicly available for everyone.
 
-____ Branch: This branch uses 0Auth Token Authentication to interact CRUD operations. (POST, GET, PUT/PATCH, DELETE)
+____ Branch: This branch uses 0Auth Token Authentication to interact CRUD operations. (POST(Create), GET(Trad), PUT/PATCH(Update), DELETE)
