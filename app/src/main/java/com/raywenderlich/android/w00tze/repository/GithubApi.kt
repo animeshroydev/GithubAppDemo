@@ -20,4 +20,7 @@ interface GithubApi {
 
     @DELETE("gists/{id}")
     fun deleteGist(@Path("id") gistId: String): Call<EmptyResponse>
+
+    @PATCH("user")
+    fun updateUser(@Body body: UserRequest): Call<User>
 }

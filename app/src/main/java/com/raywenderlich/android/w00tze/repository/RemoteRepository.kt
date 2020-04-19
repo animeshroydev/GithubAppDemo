@@ -125,4 +125,25 @@ object RemoteRepository : Repository {
 
         return liveData
     }
+
+    override fun updateUser(request: UserRequest): LiveData<Either<User>> {
+        val liveData = MutableLiveData<Either<User>>()
+
+        api.updateUser(request).enqueue(object : Callback<User> {
+
+            override fun onResponse(call: Call<User>?, response: Response<User>?) {
+                if (response != null && response.isSuccessful) {
+                    liveData.value = Either.success(response.body())
+                } else {
+                    liveData.value = Either.error(ApiError.USER, null)
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                liveData.value = Either.error(ApiError.USER, null)
+            }
+        })
+
+        return liveData
+    }
 }

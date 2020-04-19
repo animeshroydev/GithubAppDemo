@@ -41,5 +41,6 @@ interface Repository {
   fun getUser(): LiveData<Either<User>>
   fun postGist(request: GistRequest): LiveData<Either<Gist>>
   fun deleteGist(gistId: String): LiveData<Either<EmptyResponse>>
+  fun updateUser(request: UserRequest) : LiveData<Either<User>>
 }
 

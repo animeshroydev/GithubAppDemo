@@ -64,27 +64,30 @@ class ProfileFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    profileViewModel.getUser().observe(this, Observer<Either<User>> { either ->
-      if (either?.status == Status.SUCCESS && either.data != null) {
-        val user = either.data
-        login.text = String.format(getString(R.string.screen_name_format), user.login)
-        repoName.text = user.name
-        company.text = user.company
-        Picasso.with(context).load(user.avatarUrl).into(avatar)
-      } else {
-        if (either?.error == ApiError.USER) {
-          Toast.makeText(context, getString(R.string.error_retriving_user), Toast.LENGTH_SHORT).show()
-        }
-      }
-    })
+    profileViewModel.getUser().observe(this, observer)
 
     val onClickListener = View.OnClickListener {
       showCompanyDialog(company.text.toString()) {
-        // TODO: add callback
+        profileViewModel.updateUser(it).observe(this, observer)
       }
     }
 
     login.setOnClickListener(onClickListener)
     company.setOnClickListener(onClickListener)
   }
+
+  private val observer = Observer<Either<User>> { either ->
+    if (either?.status == Status.SUCCESS && either.data != null) {
+      val user = either.data
+      login.text = String.format(getString(R.string.screen_name_format), user.login)
+      repoName.text = user.name
+      company.text = user.company
+      Picasso.with(context).load(user.avatarUrl).into(avatar)
+    } else {
+      if (either?.error == ApiError.USER) {
+        Toast.makeText(context, getString(R.string.error_retriving_user), Toast.LENGTH_SHORT).show()
+      }
+    }
+  }
+
 }

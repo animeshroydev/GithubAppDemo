@@ -33,7 +33,11 @@ package com.raywenderlich.android.w00tze.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
 import com.raywenderlich.android.w00tze.app.Injection
+import com.raywenderlich.android.w00tze.model.Either
+import com.raywenderlich.android.w00tze.model.User
+import com.raywenderlich.android.w00tze.model.UserRequest
 
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
@@ -41,4 +45,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
   private val user = repository.getUser()
 
   fun getUser() = user
+
+  fun updateUser(company: String): LiveData<Either<User>> {
+    val request = UserRequest(company)
+    return repository.updateUser(request)
+  }
 }
